@@ -8,6 +8,7 @@ function ZipBundler(options) {
 
 ZipBundler.prototype.apply = function(compiler) {
     const regex = this.regex;
+    const outFile = this.outFile;
 
     compiler.plugin("emit", function(compilation, callback) {
         const jszip = new JSZip();
@@ -17,7 +18,7 @@ ZipBundler.prototype.apply = function(compiler) {
             ({ currentFile, percent }) => logProgress(currentFile, percent))
             .then(function(content) {
                 console.log("\ncompression finished", content.length);
-                compilation.assets["out.zip"] = { source: () => content, size: () => content.length };
+                compilation.assets[outFile] = { source: () => content, size: () => content.length };
                 callback();
             })
             .catch((error) => {
